@@ -1,5 +1,5 @@
 # VSDF: A variation-based spatiotemporal data fusion method
-# Author: Chen XU
+# Author: Chen Xu, Xiaoping Du, Zhenzhen Yan, Junjie Zhu, Shu Xu and Xiangtao Fan.
 # Version: 0.1
 # Date:23/10/2022
 
