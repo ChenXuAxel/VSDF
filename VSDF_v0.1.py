@@ -47,7 +47,6 @@ def save_img(array, path):
         dst.GetRasterBand(1).WriteArray(array)
     else:
         # save all bands
-        # 存放全部波段
         n_band = array.shape[-1]
         dst = driver.Create(path, array.shape[1], array.shape[0], n_band, 6)
         for b in range(n_band):
