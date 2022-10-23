@@ -1,6 +1,8 @@
 # VSDF: A variation-based spatiotemporal data fusion method
 Python code for VSDF (v0.1).
 
+Available time: 24/10/2022
+
 Requirement for Python:
 * Python 3.6
 * gdal 3.1.4
