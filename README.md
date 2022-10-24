@@ -1,5 +1,5 @@
 # VSDF: A variation-based spatiotemporal data fusion method
-Python code for VSDF (v0.1).
+Python code for VSDF (v0.1)
 
 Available time: 23/10/2022
 
@@ -24,3 +24,6 @@ Input:
 
 Output:
 * Fusion_L2 Tif
+
+Ref:
+Xu, Chen, Xiaoping Du, Zhenzhen Yan, Junjie Zhu, Shu Xu, and Xiangtao Fan. 2022. “Remote Sensing of Environment VSDF : A Variation-Based Spatiotemporal Data Fusion Method.” Remote Sensing of Environment 283 (September). Elsevier Inc.: 113309. doi:10.1016/j.rse.2022.113309.
