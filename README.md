@@ -26,4 +26,5 @@ Output:
 * Fusion_L2 Tif
 
 Ref:
+
 Xu, Chen, Xiaoping Du, Zhenzhen Yan, Junjie Zhu, Shu Xu, and Xiangtao Fan. 2022. “Remote Sensing of Environment VSDF : A Variation-Based Spatiotemporal Data Fusion Method.” Remote Sensing of Environment 283 (September). Elsevier Inc.: 113309. doi:10.1016/j.rse.2022.113309.
