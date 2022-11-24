@@ -1,7 +1,7 @@
 # VSDF: A variation-based spatiotemporal data fusion method
 # Author: Chen Xu, Xiaoping Du, Zhenzhen Yan, Junjie Zhu, Shu Xu and Xiangtao Fan.
-# Version: 0.1
-# Date:23/10/2022
+# Version: 0.11
+# Date:24/11/2022
 
 from guided_filter_pytorch.guided_filter import FastGuidedFilter,GuidedFilter
 import collections
@@ -131,7 +131,7 @@ def get_band_distance(x_in_window, y_in_window, array):
     return distance
 
 
-def VSDF_clean(L1_path, M1_path, M2_path, out_folder, P, max_value):
+def VSDF_clean(L1_path, M1_path, M2_path, out_folder, P, max_value, n_f=5, skip_edge=False):
     # create output folder if not exist
     if not os.path.exists(out_folder):
         os.makedirs(out_folder)
@@ -199,7 +199,7 @@ def VSDF_clean(L1_path, M1_path, M2_path, out_folder, P, max_value):
         n_clusters = 45
     # Eq. (9)
     else:
-        n_clusters = int((3 - 1/RRI) * 2 * 5)
+        n_clusters = int((3 - 1/RRI) * 2 * n_f)
 
     # guided filter
     # Parameter for guided filter can be changed according to the input images.
@@ -303,23 +303,23 @@ def VSDF_clean(L1_path, M1_path, M2_path, out_folder, P, max_value):
                 pre_delta_img_new[y, x, band] = np.sum(pre_delta_img_window[:, :, band] * distance_result)
 
     pre_delta_img = pre_delta_img_new
-
+    
     """""""""""""""""""""""""""
     Edge fusion
     """""""""""""""""""""""""""
+    if not skip_edge:
+        edges = feature.canny(L1_img[:, :, 0], sigma=0)
+        for b in range(1, band_num):
+            edges += feature.canny(L1_img[:, :, b], sigma=0)
 
-    edges = feature.canny(L1_img[:, :, 0], sigma=0)
-    for b in range(1, band_num):
-        edges += feature.canny(L1_img[:, :, b], sigma=0)
+        # Eq. (16)
+        pre_delta_img_sr = FastGuidedFilter(2, 0.1)(M1_sr, make_tensor(pre_delta_img), L1_sr)
+        pre_delta_img_sr = GuidedFilter(2, 0.1)(L1_sr, pre_delta_img_sr)
 
-    # Eq. (16)
-    pre_delta_img_sr = FastGuidedFilter(2, 0.1)(M1_sr, make_tensor(pre_delta_img), L1_sr)
-    pre_delta_img_sr = GuidedFilter(2, 0.1)(L1_sr, pre_delta_img_sr)
-
-    # Eq. (17)
-    for band in range(band_num):
-        pre_delta_img[:, :, band] = np.where(edges, make_array(pre_delta_img_sr)[:, :, band],
-                                             pre_delta_img[:, :, band])
+        # Eq. (17)
+        for band in range(band_num):
+            pre_delta_img[:, :, band] = np.where(edges, make_array(pre_delta_img_sr)[:, :, band],
+                                                 pre_delta_img[:, :, band])
 
     pre_L2_img = pre_delta_img + L1_img
 
@@ -344,9 +344,15 @@ M1_path =
 M2_path =
 out_folder =
 
+# if the input datasets are not reliable, a smaller n_f is recommended
+n_f = 5 # in Eq.(9)
+
+# if the input datasets are not reliable, skip_edge is recommended to be set as True
+skip_edge = False
+
 import time
 a = time.time()
-VSDF_path = VSDF_clean(L1_path, M1_path, M2_path, out_folder, P, max_value)
+VSDF_path = VSDF_clean(L1_path, M1_path, M2_path, out_folder, P, max_value, n_f=n_f, skip_edge=skip_edge)
 print(time.time()-a)
 
 
